@@ -6,17 +6,28 @@
             <pattern>%-4relative [%thread] %-5level %logger{35} -%kvp- %msg %n</pattern>
         </encoder>
     </appender>
-    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+
+    <appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_PATH}/mylog.log</file>
-        <append>true</append>
-        <immediateFlush>true</immediateFlush>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>mylog-%d{yyyy-MM-dd}.%i.txt</fileNamePattern>
+            <!-- each file should be at most 100MB, keep 60 days worth of history, but at most 20GB -->
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>60</maxHistory>
+            <totalSizeCap>20GB</totalSizeCap>
+        </rollingPolicy>
+        <!-- shows plain message-->
+        <!--<encoder>
+            <pattern>%msg%n</pattern>
+        </encoder>-->
         <encoder>
-            <pattern>%-4relative [%thread] %-5level %logger{35} -%kvp- %msg%n</pattern>
+            <pattern>%-4relative [%thread] %-5level %logger{35} -%kvp- %msg %n</pattern>
         </encoder>
     </appender>
 
     <root level="INFO">
         <appender-ref ref="STDOUT"/>
-        <appender-ref ref="FILE"/>
+        <appender-ref ref="ROLLING"/>
     </root>
 </configuration>
